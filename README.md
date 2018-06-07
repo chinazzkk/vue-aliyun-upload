@@ -1,11 +1,12 @@
-### vue-aliyun-upload
+vue-aliyun-upload 一款很山寨的阿里云上传组件
+===
 
     阿里云vue上传组件，兼容性好，官方demo改变，通过授权token后上传，除了依赖 plupload 不需要 sdk 支持。
 
-##### 使用方法
-
+使用方法
+===
     import SfsVueAliossUpload from 'sfs-vue-aliyun-upload'
-
+    
     <sfs-vue-alioss-upload
             authServerUrl="http://127.0.0.1/oss-upload-auth/get.php"
             :onInit="onInit"
@@ -15,30 +16,35 @@
             :showUI="true"
             :showProgress="true"
             extensions="jpg,png,jpeg,mp4,mov,MP4,MOV"
-
+    
     ></sfs-vue-alioss-upload>
-
-
+    
+    
     export default {
         components: {SfsVueAliossUpload},
     }
 
-### 回调事件
-##### 通过回调事件可以自定义开发，showUI = false  showProgress = false 屏蔽默认demo ui
-    onBeforeUpload
-    onFilesAdded
-    onFileUploaded
-    onSuccess
-    onError
-    onProgress
-    onInit
+回调事件
+===
+ #####通过接收、重写回调事件可以自定义开发所需的流程，比如结合ivew等第三方UI框架的同时比较适用。
+ #####demo只是做了个简单的演示，正常适用基本都会屏蔽自己开发。
+ #####showUI = false  showProgress = false 屏蔽默认demo ui
+ 
+ <br>       onBeforeUpload
+ <br>       onFilesAdded
+ <br>       onFileUploaded
+ <br>       onSuccess
+ <br>       onError
+ <br>       onProgress
+ <br>       onInit
 
 
-### token获取参考官方SDK
-(https://help.aliyun.com/document_detail/31920.html?spm=a2c4g.11186623.6.629.CKS3hE)
+Token获取参考官方SDK
+===
+ https://help.aliyun.com/document_detail/31920.html?spm=a2c4g.11186623.6.629.CKS3hE
 
-    PHP示例(demo.php)：
-
+PHP示例(demo.php) 示例中的authServerUrl
+===
     <?php
         // 指定允许其他域名访问
         header('Access-Control-Allow-Origin:*');
