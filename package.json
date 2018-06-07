@@ -1,0 +1,26 @@
+{
+  "name": "sfs-vue-aliyun-upload",
+  "version": "0.0.1",
+  "description": "Vue plug-in based on the Ali cloud",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chinazzkk/vue-aliyun-upload.git"
+  },
+  "keywords": [
+    "aliyun",
+    "vue"
+  ],
+  "author": "zk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chinazzkk/vue-aliyun-upload/issues"
+  },
+  "homepage": "https://github.com/chinazzkk/vue-aliyun-upload#readme",
+  "dependencies": {
+    "plupload": "^2.3.6"
+  }
+}
