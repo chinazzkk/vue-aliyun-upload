@@ -28,7 +28,6 @@
                 policyBase64: '',
                 signature: '',
                 filename: '',
-                key: '',
                 expire: 0,
                 now: Date.parse(new Date()) / 1000,
                 uploader: null,
@@ -37,6 +36,9 @@
             };
         },
         props: {
+            oss_dir:{
+                default:''
+            },
             use_real_name:{
                 default:false
             },
@@ -112,7 +114,7 @@
                     this.signature = obj.signature;
                     this.expire = parseInt(obj.expire, 10);
                     this.callbackbody = obj.callback;
-                    this.key = this.openId;
+                    this.key = this.g_object_name;
                     return true;
                 }
                 return false;
@@ -136,19 +138,17 @@
             },
             calculateObjectName(filename) {
                 if (this.use_real_name === true) {
-                    this.g_object_name += `${filename}`;
+                    this.g_object_name = this.oss_dir + `${filename}`;
                 } else if (this.use_real_name === false) {
                     const suffix = this.getSuffix(filename);
-                    this.g_object_name = this.key + this.randomString(10) + suffix;
+                    this.g_object_name = this.oss_dir + this.randomString(10) + suffix;
                 }
                 return '';
             },
             setUploadParam(up, filename, ret) {
-                console.log(up)
                 if (ret === false) {
                     this.getSignature();
                 }
-                this.g_object_name = this.key;
                 if (filename !== '') {
                     this.calculateObjectName(filename);
                 }
@@ -160,9 +160,7 @@
                     success_action_status: '200',
                     signature: this.signature,
                     callback: this.callbackbody,
-                };
-                console.log(this.g_object_name)
-                console.log(this.uploader)
+                }
                 up.setOption({
                     url: this.host,
                     multipart_params: newMultipartParams,

@@ -6,7 +6,7 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
 使用方法
 ===
     import SfsVueAliossUpload from 'sfs-vue-aliyun-upload'
-    
+
     <sfs-vue-alioss-upload
             authServerUrl="http://127.0.0.1/oss-upload-auth/get.php"
             :onInit="onInit"
@@ -16,27 +16,28 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
             :showUI="true"
             :showProgress="true"
             extensions="jpg,png,jpeg,mp4,mov,MP4,MOV"
-    
+            oss_dir="vue_upload/"
+
     ></sfs-vue-alioss-upload>
-    
-    
+
+
     export default {
         components: {SfsVueAliossUpload},
     }
 
 回调事件
 ===
- #####通过接收、重写回调事件可以自定义开发所需的流程，比如结合ivew等第三方UI框架的同时比较适用。
- #####demo只是做了个简单的演示，正常适用基本都会屏蔽自己开发。
- #####showUI = false  showProgress = false 屏蔽默认demo ui
- 
- <br>       onBeforeUpload
- <br>       onFilesAdded
- <br>       onFileUploaded
- <br>       onSuccess
- <br>       onError
- <br>       onProgress
- <br>       onInit
+ <br> 通过接收、重写回调事件可以自定义开发所需的流程，比如结合ivew等第三方UI框架的同时比较适用。
+ <br> demo只是做了个简单的演示，正常适用基本都会屏蔽自己开发。
+ <br> showUI = false  showProgress = false 屏蔽默认demo ui
+
+ <br>       onFilesAdded (up, file)
+ <br>       onBeforeUpload (up, file)
+ <br>       onProgress (up, file)
+ <br>       onSuccess (up, file)
+ <br>       onError (up, err)
+ <br>       onFileUploaded (up, file, info)
+ <br>       onInit ()
 
 
 Token获取参考官方SDK
