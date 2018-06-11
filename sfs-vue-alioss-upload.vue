@@ -168,7 +168,6 @@
                 up.start();
             },
             upload() {
-                console.log('init......')
                 let that = this
                 console.log(that.extensions)
                 let myPlupload = new plupload.Uploader({
@@ -190,6 +189,8 @@
                     init: {
                         PostInit: () => {
                             that.uploader = myPlupload
+                            console.log('sfs-vue-alioss init')
+                            that.onInit(myPlupload)
                         },
                         FilesAdded: (up, files) => {
                             this.$refs.ossFiles.innerHTML =''

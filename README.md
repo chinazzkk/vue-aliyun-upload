@@ -37,7 +37,7 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
  <br>       onSuccess (up, file)
  <br>       onError (up, err)
  <br>       onFileUploaded (up, file, info)
- <br>       onInit ()
+ <br>       onInit (object)
 
 
 Token获取参考官方SDK
