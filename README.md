@@ -31,7 +31,7 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
  <br> demo只是做了个简单的演示，正常适用基本都会屏蔽自己开发。
  <br> showUI = false  showProgress = false 屏蔽默认demo ui
 
- <br>       onFilesAdded (up, file)
+ <br>       onFilesAdded (up, file) 上传之后可以通过object.oss_name 获得oss文件名
  <br>       onBeforeUpload (up, file)
  <br>       onProgress (up, file)
  <br>       onSuccess (up, file)

@@ -1,12 +1,12 @@
 <template>
     <div class="sfs-upload-box" >
-        <div v-if="showUI">
+        <div v-show="showUI">
             <h4>Vue alioss</h4>
             <a id="selectfiles" href="" class="sfs-ali-vue-a">选择文件</a>
             <a @click="uploader.start()"  class="sfs-ali-vue-a">开始上传</a>
 
         </div>
-        <div v-if="showProgress">
+        <div v-show="showProgress">
             <div ref="ossFiles"></div>
             <div ref="container"></div>
         </div>
@@ -143,14 +143,15 @@
                     const suffix = this.getSuffix(filename);
                     this.g_object_name = this.oss_dir + this.randomString(10) + suffix;
                 }
-                return '';
+                return this.g_object_name;
             },
-            setUploadParam(up, filename, ret) {
+            setUploadParam(up, file, ret) {
+                let filename = file.name
                 if (ret === false) {
                     this.getSignature();
                 }
                 if (filename !== '') {
-                    this.calculateObjectName(filename);
+                    file.oss_name = this.calculateObjectName(filename);
                 }
                 const newMultipartParams = {
                     key: this.g_object_name,
@@ -201,7 +202,7 @@
                             that.onFilesAdded(up, files)
                         },
                         BeforeUpload: (up, file) => {
-                            that.setUploadParam(myPlupload, file.name, false)
+                            that.setUploadParam(myPlupload, file, false)
                             that.onBeforeUpload(up, file)
                         },
                         UploadProgress: (up, file) => {
