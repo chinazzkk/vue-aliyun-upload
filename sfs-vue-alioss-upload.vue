@@ -234,6 +234,9 @@
                             let idx = 0
                             plupload.each(files, (file) => {
                                 idx++
+                                let ext = file.type
+                                let ext_arr = ext.split("\/")
+                                console.log(ext_arr)
                                 if(that.showPreview){
                                     let _file = file
                                     let reader = new FileReader()

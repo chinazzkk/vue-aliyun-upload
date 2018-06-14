@@ -3,22 +3,26 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
 
     阿里云vue上传组件，兼容性好，官方demo改变，通过授权token后上传，除了依赖 plupload 不需要 sdk 支持。
 
+![image](https://raw.githubusercontent.com/chinazzkk/vue-aliyun-upload/master/img/1528992331630.jpg)
+
+    更新了默认的样式，如上图。增加了选择后本地预览。视频文件或者其他文件暂时不做预览。
+    
 使用方法
 ===
     import SfsVueAliossUpload from 'sfs-vue-aliyun-upload'
 
     <sfs-vue-alioss-upload
             authServerUrl="http://127.0.0.1/oss-upload-auth/get.php"
-            :upload_title="false"
-            :onInit="onInit"
-            :onSuccess="onSuccess"
-            :use_real_name="false"
-            max_file_size="50mb"
+            :showPreview="true"
             :showUI="true"
             :showProgress="true"
+            :uploadTitle="false"
+            :useRealName="true"
+            :onInit="onInit"
+            :onFileUploaded="onFileUploaded"
+            maxSize="50mb"
+            ossDir="oss_test_upload/"
             extensions="jpg,png,jpeg,mp4,mov,MP4,MOV"
-            oss_dir="vue_upload/"
-
     ></sfs-vue-alioss-upload>
 
 
@@ -31,14 +35,16 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
  <br> 通过接收、重写回调事件可以自定义开发所需的流程，比如结合ivew等第三方UI框架的同时比较适用。
  <br> demo只是做了个简单的演示，正常适用基本都会屏蔽自己开发。
  <br> showUI = false  showProgress = false 屏蔽默认demo ui
-
+ <br> 上传文件后可以通过 file.srcImg 获取 本地预览图片的base64 
+ <br> 上传文件后可以通过 file.oss_name 获取 oss 的重命名
+    
+ <br>       onInit (object)
  <br>       onFilesAdded (up, file) 上传之后可以通过 object.oss_name 获得oss文件名
  <br>       onBeforeUpload (up, file)
  <br>       onProgress (up, file)
  <br>       onSuccess (up, file)
  <br>       onError (up, err)
  <br>       onFileUploaded (up, file, info)
- <br>       onInit (object)
 
 
 Token获取参考官方SDK
