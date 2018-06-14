@@ -7,17 +7,24 @@
         </div>
         <div v-show="showProgress">
             <div ref="ossFiles" class="sfs-vue-oss_file_box">
-                <div class="sfs-vue-ali-item" v-for="item in fileList">
-                    <a>{{item.name}} <br> ({{Math.floor(item.size/1024) + 'KB'}}) </a>
-                    <div class="sfs-vue-ali-progress">
-                        <div class="sfs-vue-ali-progress-bar" v-bind:ref="'progress_'+item.id" style="width: 0"><span
-                                v-bind:ref="'progress_txt_'+item.id"></span></div>
+                <transition-group name="list" tag="div" style="width: 100%">
+                    <div class="sfs-vue-ali-item list-item" v-for="item in fileList" v-bind:key="item.id" >
+                        <div class="sfs-vue-ali-item__info">
+                            <img v-if="showPreview" :src="item.srcImg"  />
+                            <span class="sfs-vue-ali-item__name">{{item.name}}</span>
+                        </div>
+                        <div class="sfs-vue-ali-progress">
+                            <div class="sfs-vue-ali-progress-bar" v-bind:ref="'progress_'+item.id" style="width: 0">
+                            </div>
+                            <span v-bind:ref="'progress_txt_'+item.id">{{Math.floor(item.size/1024) + 'KB'}}</span>
+
+                        </div>
+                        <a  @click="removeFile" :data-uid="item.id" class="sfs-vue-oss_file_box_close"><img
+                                :data-uid="item.id"
+                                src="data:image/png;base64,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"/>
+                        </a>
                     </div>
-                    <a  @click="removeFile" :data-uid="item.id" class="sfs-vue-oss_file_box_close"><img
-                            :data-uid="item.id"
-                            src="data:image/png;base64,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"/>
-                    </a>
-                </div>
+                </transition-group>
             </div>
             <div ref="container"></div>
         </div>
@@ -58,6 +65,9 @@
                 default: false
             },
             showUI: {
+                default: true
+            },
+            showPreview: {
                 default: true
             },
             showProgress: {
@@ -224,19 +234,22 @@
                             let idx = 0
                             plupload.each(files, (file) => {
                                 idx++
-                                let _file = file
-                                let reader = new FileReader()
-                                reader.onload = (e) => {
-                                    let result = e.target.result
-                                    _file.srcImg = result
-                                    console.log(_file)
-                                    that.fileList.push(_file)
-                                    if (idx === fileTotal)
-                                        that.onFilesAdded(up, files)
+                                if(that.showPreview){
+                                    let _file = file
+                                    let reader = new FileReader()
+                                    reader.onload = (e) => {
+                                        let result = e.target.result
+                                        _file.srcImg = result
+                                        console.log(_file)
+                                        that.fileList.push(_file)
+                                        if (idx === fileTotal)
+                                            that.onFilesAdded(up, files)
+                                    }
+                                    reader.readAsDataURL(file.getNative());
+                                }else{
+                                    that.onFilesAdded(up, files)
                                 }
-                                reader.readAsDataURL(file.getNative());
                             })
-                            // console.log('file_name: ', file.name, ',    ', 'file_size:  ', file.size);
                         },
                         BeforeUpload: (up, file) => {
                             that.setUploadParam(myPlupload, file, false)
@@ -300,7 +313,6 @@
     .sfs-ali-vue-a {
         display: flex;
         flex: 1;
-        color: #666;
         text-align: center;
         justify-content: center;
         text-decoration: none;
@@ -309,8 +321,26 @@
         margin-left: 0.1rem;
         margin-right: 0.1rem;
         cursor: pointer;
-        border: 0.08rem solid #eaeaea;
+        border-radius: 4px;
+        color: #666;
+        font-weight: bold;
+        border: 0.09rem solid #666;
+        flex-flow: column;
+
+        transition: background 0.6s;
+        -moz-transition: background 0.6s;	/* Firefox 4 */
+        -webkit-transition: background 0.6s;	/* Safari 和 Chrome */
+        -o-transition: background 0.6s;	/* Opera */
+
     }
+
+    .sfs-ali-vue-a:hover{
+        color: #000;
+        font-weight: 600;
+        border: 0.09rem solid #000;
+        background: yellow;
+    }
+
     .sfs-vue-ali-item .sfs-vue-oss_file_box_close {
         color: #FF0000;
         cursor: pointer;
@@ -320,6 +350,14 @@
         justify-content: center;
         align-items: center;
         width: 3rem;
+    }
+
+    .sfs-vue-ali-item .sfs-vue-oss_file_box_close:hover {
+        transform:rotate(-25deg);
+        -ms-transform:rotate(-25deg); 	/* IE 9 */
+        -moz-transform:rotate(-25deg); 	/* Firefox */
+        -webkit-transform:rotate(-25deg); /* Safari 和 Chrome */
+        -o-transform:rotate(-25deg); 	/* Opera */
     }
 
     .sfs-vue-ali-item .sfs-vue-oss_file_box_close img {
@@ -336,10 +374,38 @@
         padding: 0.2rem 0.8rem;
         overflow: hidden;
         display: flex;
-        width: 100%;
         align-items: center;
         justify-content: center;
+        margin-top: 0.2rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
+    .sfs-vue-ali-item__info{
+        display: flex;
+        flex-flow: row;
+        max-width: 60%;
+        width: 60%;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .sfs-vue-ali-item__info img{
+        width: 2rem;height: 2rem;
+        padding: 0.2rem;
+        background: #fefefe;
+        text-align: center;
+    }
+
+    .sfs-vue-ali-item__name{
+        display: block;
+        padding: 0.2rem;
+        color: #666;
+        flex: 2;
+    }
+
+    .sfs-vue-ali-item__size{
+        color: #72bde5;
     }
 
     .sfs-vue-ali-item a {
@@ -359,6 +425,7 @@
         -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
         box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
         display: flex;
+        position: relative;
     }
 
     .sfs-vue-ali-progress-bar {
@@ -380,6 +447,25 @@
         transition-duration: 0.6s;
         transition-property: width;
         transition-timing-function: ease;
+        position: relative;
         width: 100%;
+    }
+
+    .sfs-vue-ali-progress span{
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        color: #fafafa;
+        text-shadow: #000 1px 1px 1px;
+    }
+
+    .list-enter-active, .list-leave-active {
+        transition: all 1s;
+    }
+    .list-enter, .list-leave-to {
+        opacity: 0;
     }
 </style>
