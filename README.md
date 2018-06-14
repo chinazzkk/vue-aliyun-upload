@@ -9,9 +9,10 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
 
     <sfs-vue-alioss-upload
             authServerUrl="http://127.0.0.1/oss-upload-auth/get.php"
+            :upload_title="false"
             :onInit="onInit"
             :onSuccess="onSuccess"
-            :use_real_name="true"
+            :use_real_name="false"
             max_file_size="50mb"
             :showUI="true"
             :showProgress="true"
@@ -31,7 +32,7 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
  <br> demo只是做了个简单的演示，正常适用基本都会屏蔽自己开发。
  <br> showUI = false  showProgress = false 屏蔽默认demo ui
 
- <br>       onFilesAdded (up, file) 上传之后可以通过object.oss_name 获得oss文件名
+ <br>       onFilesAdded (up, file) 上传之后可以通过 object.oss_name 获得oss文件名
  <br>       onBeforeUpload (up, file)
  <br>       onProgress (up, file)
  <br>       onSuccess (up, file)
