@@ -1,6 +1,6 @@
 <template>
     <div class="sfs-upload-box">
-        <h4 v-show="upload_title">{{upload_title}}</h4>
+        <h4 v-show="uploadTitle">{{uploadTitle}}</h4>
         <div class="sfs-vue-oss_file_box_control" v-show="showUI">
             <a id="selectfiles" href="" class="sfs-ali-vue-a">选择文件</a>
             <a @click="uploader.start()" v-if="fileList.length > 0" class="sfs-ali-vue-a">开始上传</a>
@@ -10,7 +10,7 @@
                 <transition-group name="list" tag="div" style="width: 100%">
                     <div class="sfs-vue-ali-item list-item" v-for="item in fileList" v-bind:key="item.id" >
                         <div class="sfs-vue-ali-item__info">
-                            <img v-if="showPreview" :src="item.srcImg"  />
+                            <img v-if="showPreview" :src="item.data_base64"  />
                             <span class="sfs-vue-ali-item__name">{{item.name}}</span>
                         </div>
                         <div class="sfs-vue-ali-progress">
@@ -55,13 +55,13 @@
             };
         },
         props: {
-            upload_title: {
+            uploadTitle: {
                 default: 'sfs-vue-upload'
             },
-            oss_dir: {
+            ossDir: {
                 default: ''
             },
-            use_real_name: {
+            useRealName: {
                 default: false
             },
             showUI: {
@@ -73,19 +73,13 @@
             showProgress: {
                 default: true
             },
-            fileId: {
-                default: ''
-            },
-            openId: {
-                default: ''
-            },
             authServerUrl: {
                 default: ''
             },
             extensions: {
                 default: 'jpg,png,jpeg,mp4,mov,MP4,MOV'
             },
-            max_file_size: {
+            maxSize: {
                 default: '500mb'
             },
             prevent_duplicates: {
@@ -122,7 +116,6 @@
         methods: {
             removeFile(e) {
                 let uid = e.target.dataset.uid
-                console.log(uid)
                 for (var i = 0; i < this.fileList.length; i++) {
                     if(this.fileList[i].id === uid)
                     {
@@ -173,11 +166,11 @@
                 return suffix;
             },
             calculateObjectName(filename) {
-                if (this.use_real_name === true) {
-                    this.g_object_name = this.oss_dir + `${filename}`;
-                } else if (this.use_real_name === false) {
+                if (this.useRealName === true) {
+                    this.g_object_name = this.ossDir + `${filename}`;
+                } else if (this.useRealName === false) {
                     const suffix = this.getSuffix(filename);
-                    this.g_object_name = this.oss_dir + this.randomString(10) + suffix;
+                    this.g_object_name = this.ossDir + this.randomString(10) + suffix;
                 }
                 return this.g_object_name;
             },
@@ -206,7 +199,6 @@
             },
             upload() {
                 let that = this
-                console.log(that.extensions)
                 let myPlupload = new plupload.Uploader({
                     runtimes: 'html5,flash,silverlight,html4',
                     browse_button: 'selectfiles',
@@ -219,14 +211,14 @@
                             extensions: that.extensions,
                         }],
                         // 最大只能上传200mb的文件
-                        max_file_size: that.max_file_size,
+                        max_file_size: that.maxSize,
                         // 不允许队列中存在重复文件
                         prevent_duplicates: that.prevent_duplicates,
                     },
                     init: {
                         PostInit: () => {
                             that.uploader = myPlupload
-                            console.log('sfs-vue-alioss init')
+                            console.log('sfs-vue-aliyun-upload-init')
                             that.onInit(myPlupload)
                         },
                         FilesAdded: (up, files) => {
@@ -234,23 +226,37 @@
                             let idx = 0
                             plupload.each(files, (file) => {
                                 idx++
+                                function result_call() {
+                                    that.fileList.push(_file)
+                                    if (idx === fileTotal)
+                                        that.onFilesAdded(up, files)
+                                }
+                                let _file = file
                                 let ext = file.type
                                 let ext_arr = ext.split("\/")
-                                console.log(ext_arr)
+                                const icon_default = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAFTUlEQVR4Xu2cOW8UQRCFq20CEo7/QAIREqwl+AMQIAEBFgIyTokjhcyBM0gNSFwhIGQCTGQRkoBghUQCJPwGroQAbyMHNrOeZUo91QU7259D1/Qxb16/97pn7CD8FI1AKPruuXmBAIWTAAJAgMIRKPz2UQAIUDgChd8+CgABCkeg8NtHASDAaASu9OOOOJBZCXJWRHaMC04LN87km8rsEZHZw3/vb/G5yOJS0nhXrj5Iut754s8S5X6YksWFXvg8aqyRCnCxHw+EgTwNQbY4TzC5ewiQDJlIlO+DKZm93QsvNrauEeDimzgTRF6GIJtbDOXeBAK0gzhG+Tm1SfYt7Anvqz3UCHDpbXwWRI60G8a/FQRoj3EUWbo1E45qBPgaRLa1H8a3JQRoj28U+XZrJmxvJMDltzG2H8K/JQSwYXxzJgypfs0CJooADilfg3/MdgG16UKAKiQttnkQQEPAuZ5kASgACpD7oEfjNxagIWSsowA2AMkAZICCdgHaYnHICFiABrqxnmQB2lgQoP5V8ESdA0CAwncBEAACNHIAC8ACcp8TEAI12TXWk0KgwwrXpg8BNISMdQhgA5CDIA6CCjoIwgIK3wVAAAiQO+VrDkwI1BAy1pNCoDaWg0JAAA10Yx0C2AAsaxegYYUCcBKYOyNgAdqqM9axABuAWEAVPyxgwi3A4QFr6w8L0BAy1pMsAAJwEJQ75Gn8RQE0hIx1FMAGYFkhEAvAArCAYQ6oChA/nh/rPw+XuV82DXTeBsr8pnzzc+gp7Lrb/D0ABKig3uavhyGAA22rXaIAJoBRACwAC1jngMcuAQswKZTeGAvQMWq4oiwL8FjhGvwogIaQsZ6iABCgBjYKUIWkzTZP4y8KoCFkrKMAJgBRABSgoG0gGaDwDKCJpQdByAAa6sZ6SgbQhoIA9W8CeRnEyyBeB69xoM02EQvQdNdYxwJMAJa1DdSgIgNMeAbweMAaqbAADSFjPcUCIEDh5wAQAAL866+C+SjUqPBqcyxAhajpgrJ2AVhA4RagrRUPgrAL0FA31lMsQBsKAkz4OQAEwAIaOYACoADZt4lkAE13jXUygAlAtoF8E8g3gescaPO+X1t/WICGkLGeYgEeIU+bPgTQEDLWIYAJQDIAGYAMQAb4swqG2LD665P9e2P9UejD669MEjjU2CEjnLq2P9/8HHp61DvXrAAQoIJ6i10CBHBgbbVLFMAGMApQxQ8LqL8LwAKwAELgGgfIADa/8WidlAEcJF67J0KghpCxDgFsAJYVAlGAGlsggPNRMBZgUyi1NRagQtR4AQqAAnAUvM4Bh4yABdgUSm2dZAFabxCAk8DcXwWjANqqM9ZRABuAZYVADSssAAvAAjaskol6G+iwwjVRIQNoCBnrSRkAAnAUnFviNf6iABpCxjoKYAOwrF0AFoAFYAHDHChLATS1dFAIMoAGurGelAG0sSAAB0G5LQIF0FadsY4C2AAkA1TxwwKwACyAdwE2Td3QuvMZ4ET/7tcgYVtWVDJ2lpQBHCReu5VxJkCU+O1x7/z26j2M+v8AyyJyULvR/1WHACbklx71zh1tJMDxdw92T68MXkuQzaahnBpDgJbARvkZpqf3Ptxz+kMjAVaLx/t3DkzHsCghbG05nFszCNAC2ig/VsLg2JPehRcbW9csYO2CE/07O0Wm5kKMh8aJCBAghQDxS5SwLDKYf9y78GlUy78SIGUYru0uAhCgu88uy8whQBYYu9sJBOjus8sycwiQBcbudgIBuvvssswcAmSBsbudQIDuPrssM4cAWWDsbicQoLvPLsvMfwNbZaq9FnonjQAAAABJRU5ErkJggg=='
                                 if(that.showPreview){
-                                    let _file = file
-                                    let reader = new FileReader()
-                                    reader.onload = (e) => {
-                                        let result = e.target.result
-                                        _file.srcImg = result
-                                        console.log(_file)
-                                        that.fileList.push(_file)
-                                        if (idx === fileTotal)
-                                            that.onFilesAdded(up, files)
+                                    let _fileExt = ext_arr[0]
+                                    if(_fileExt === 'image')
+                                    {
+                                        let reader = new FileReader()
+                                        reader.onload = (e) => {
+                                            let result = e.target.result
+                                            _file.data_base64 = result
+                                            result_call()
+                                        }
+                                        reader.readAsDataURL(file.getNative())
+                                    }else if(_fileExt === 'video')
+                                    {
+                                        _file.data_base64 = 'data:image/png;base64,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'
+                                        result_call()
+                                    }else{
+                                        _file.data_base64 = icon_default
+                                        result_call()
                                     }
-                                    reader.readAsDataURL(file.getNative());
                                 }else{
-                                    that.onFilesAdded(up, files)
+                                    _file.data_base64 = icon_default
+                                    result_call()
                                 }
                             })
                         },
@@ -259,7 +265,6 @@
                             that.onBeforeUpload(up, file)
                         },
                         UploadProgress: (up, file) => {
-                            console.log(that.$refs['progress_' + file.id])
                             that.$refs['progress_' + file.id][0].style.width = file.percent + '%'
                             that.$refs['progress_txt_' + file.id][0].innerHTML = file.percent + '%'
                             if(file.percent === 100)

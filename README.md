@@ -2,9 +2,10 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
 ===
 
     阿里云vue上传组件，兼容性好，官方demo改变，通过授权token后上传，除了依赖 plupload 不需要 sdk 支持。
+    将持续更多拖拽上传等功能以及阿里云更多vue结合项目。请继续关注。
 
-![image](https://raw.githubusercontent.com/chinazzkk/vue-aliyun-upload/master/img/1528992331630.jpg)
-
+<img src="https://raw.githubusercontent.com/chinazzkk/vue-aliyun-upload/master/img/1528992331630.jpg" style="max-width:50%;" />
+    
     更新了默认的样式，如上图。增加了选择后本地预览。视频文件或者其他文件暂时不做预览。
     
 使用方法
@@ -34,12 +35,13 @@ vue-aliyun-upload 一款很山寨的阿里云上传组件
 ===
  <br> 通过接收、重写回调事件可以自定义开发所需的流程，比如结合ivew等第三方UI框架的同时比较适用。
  <br> demo只是做了个简单的演示，正常适用基本都会屏蔽自己开发。
- <br> showUI = false  showProgress = false 屏蔽默认demo ui
- <br> 上传文件后可以通过 file.srcImg 获取 本地预览图片的base64 
+ <br> showUI = false  showProgress = false 屏蔽默认demo ui 
+ <br> 上传文件后可以通过 file.data_base64 获取 本地预览图片的base64 
  <br> 上传文件后可以通过 file.oss_name 获取 oss 的重命名
+ <br> 自定义控件的时候可以通过获取 id 为 "selectfiles" 的 click 事件调起文件选择框
     
  <br>       onInit (object)
- <br>       onFilesAdded (up, file) 上传之后可以通过 object.oss_name 获得oss文件名
+ <br>       onFilesAdded (up, file) 上传之后可以通过 object.oss_name 获得oss文件名 uploadTitle设置成文字时候显示上传页头文字
  <br>       onBeforeUpload (up, file)
  <br>       onProgress (up, file)
  <br>       onSuccess (up, file)
