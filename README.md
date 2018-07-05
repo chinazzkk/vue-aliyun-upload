@@ -1,6 +1,11 @@
 vue-aliyun-upload 一款很山寨的阿里云上传组件
 ===
 
+    安装方式：
+    
+    npm install fs-vue-aliyun-upload --save-dev
+    
+
     阿里云vue上传组件，兼容性好，官方demo改变，通过授权token后上传，除了依赖 plupload 不需要 sdk 支持。
     将持续更多拖拽上传等功能以及阿里云更多vue结合项目。请继续关注。
 
